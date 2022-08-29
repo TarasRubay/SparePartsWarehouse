@@ -12,11 +12,12 @@ namespace SparePartsWarehouse
     static class UserInterface
     {
         public const long Dziubak = 862684408;
+        public const long Zanko = 838428812;
         public const long Rubay = 1143288883;
         public const string FindForEquipment = "Пошук запчастини по обладнанню";
         public const string FindForType = "Пошук запчастини по типу";
         public const string FindForPartsNumber = "Пошук запчастини по заказному коду";
-        public const string FindForEquipmentService = "Пошук запчастини для ТО";
+        public const string FindForEquipmentService = "Google";
 
         public const string CSK = "ЦСК";
         public const string CVK = "ЦВК";
@@ -28,6 +29,7 @@ namespace SparePartsWarehouse
         public const string ChoiseTypeParts = "Виберіть Тип Запчастини";
         public const string EquipmentTypeww = "Виберіть тип обланднання";
         public const string EquipmentPartsww = "Виберіть запчастину";
+        public const string WriteWord = "Впишіть текст";
 
 
         public const string ElectricalParts = "Електричні запчастини";
@@ -75,13 +77,40 @@ namespace SparePartsWarehouse
                 }
             }
             if (user.LastMessage is null) user.LastMessage = empty;
+
             if (user.LastMessage == empty || user.LastMessage.Length > 25)
             {
                 FirtMenu(client,msg,user,cancellationToken);
             }
             else
             {
-                SecondMenu(client,msg,user,cancellationToken);
+                Sparepart sparepart = new() {Id = 0 };
+                if(user.LastMessage == Parts)
+                {
+                    try
+                    {
+                        if (msg.Text is not null)
+                        {
+
+                        string str = msg.Text.Split('*')[0];
+                            if (str.Length > 0)
+                            {
+                                sparepart = TelegramBot.Spareparts.FirstOrDefault(s => s.Id.Equals(Convert.ToInt32(str)));
+                            }     
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        sparepart.Id = -112;
+                    }
+                        if(sparepart.Id == -112)
+                        {
+                        user.LastMessage = FindForEquipmentService;
+                        }
+                }
+                
+                    SecondMenu(client,msg,user,cancellationToken);
+                
             }
           
             
@@ -99,6 +128,14 @@ namespace SparePartsWarehouse
                         await client.SendTextMessageAsync(
                                     Dziubak,
                                     user.LastMessage + $"\n забрав {user}" 
+                                    );
+                        await client.SendTextMessageAsync(
+                                    Zanko,
+                                    user.LastMessage + $"\n забрав {user}"
+                                    );
+                        await client.SendTextMessageAsync(
+                                    Rubay,
+                                    user.LastMessage + $"\n забрав {user}"
                                     );
                         await client.SendTextMessageAsync(
                                 msg.Chat.Id,
@@ -138,7 +175,35 @@ namespace SparePartsWarehouse
                         catch (Exception)
                         { }
                     break;
-                
+                case FindForPartsNumber:
+                        try
+                        {
+                            user.MenuLevel = 1;
+                            user.LastMessage = ChoiseTypeParts;
+                            await client.SendTextMessageAsync(
+                                        msg.Chat.Id,
+                                        ChoiseTypeParts,
+                                        replyMarkup: MenuLevel_ListTypeSpareparts(),
+                                        cancellationToken: cancellationToken);
+                        }
+                        catch (Exception)
+                        { }
+                    break;
+                case FindForEquipmentService:
+                    try
+                    {
+                        user.MenuLevel = 1;
+                        user.LastMessage = FindForEquipmentService;
+                        await client.SendTextMessageAsync(
+                                    msg.Chat.Id,
+                                    WriteWord,
+                                    replyMarkup: _BackSingle(),
+                                    cancellationToken: cancellationToken);
+                    }
+                    catch (Exception)
+                    { }
+                    break;
+
                 default:
                     break;
             }
@@ -205,26 +270,28 @@ namespace SparePartsWarehouse
                         user.LastMessage = empty;
                     }
                     break;
+                case FindForEquipmentService:
+                    try
+                    {
+                        await client.SendTextMessageAsync(
+                                    msg.Chat.Id,
+                                    EquipmentParts + " або " + WriteWord,
+                                    replyMarkup: GoogleSearch(msg.Text),
+                                    cancellationToken: cancellationToken);
+                        user.LastMessage = Parts;
+                    }
+                    catch (Exception)
+                    {
+                        user.LastMessage = empty;
+                    }
+                    break;
 
                 default:
                     break;
             }
         }
 
-        public static async void FindForEquipmentLevel(int level)
-        {
-            if(level == 1)
-            {
-
-            }else if(level == 2)
-            {
-
-            }else if(level == 3)
-            {
-
-            }
-
-        }
+        
         public static ReplyKeyboardMarkup _Back()
         {
 
@@ -238,13 +305,25 @@ namespace SparePartsWarehouse
             };
             return replyKeyboardMarkup;
         }
+        public static ReplyKeyboardMarkup _BackSingle()
+        {
+
+            ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+                 {
+                    new KeyboardButton[] { Exit }
+                })
+            {
+                ResizeKeyboard = true
+            };
+            return replyKeyboardMarkup;
+        }
         public static ReplyKeyboardMarkup MainMenu()
         {
 
             ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
                  {
-                    new KeyboardButton[] { FindForEquipment, FindForType }
-                    //new KeyboardButton[] { FindForPartsNumber, FindForEquipmentService },
+                    new KeyboardButton[] { FindForEquipment, FindForType },
+                    new KeyboardButton[] { FindForEquipmentService },
                 })
             {
                 ResizeKeyboard = true
@@ -322,6 +401,22 @@ namespace SparePartsWarehouse
             List<KeyboardButton[]> butIns = new();
             butIns.Add(new KeyboardButton[] { Exit });
             foreach (var item in WarehouseRepository.GetListTypeEquipmentParts(eequipment))
+            {
+                butIns.Add(new KeyboardButton[] { item });
+            }
+            ReplyKeyboardMarkup replyKeyboardMarkup = new(butIns.ToArray())
+            {
+                ResizeKeyboard = true,
+                Selective = true
+            };
+
+            return replyKeyboardMarkup;
+        }
+        public static IReplyMarkup GoogleSearch(string eequipment)
+        {
+            List<KeyboardButton[]> butIns = new();
+            butIns.Add(new KeyboardButton[] { Exit });
+            foreach (var item in WarehouseRepository.GetListGoogleSearch(eequipment))
             {
                 butIns.Add(new KeyboardButton[] { item });
             }

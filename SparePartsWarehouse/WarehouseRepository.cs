@@ -47,6 +47,26 @@ namespace SparePartsWarehouse
             }
             return list;
         }
+        public static List<string> GetListGoogleSearch(string equipment)
+        {
+            List<string> list = new List<string>();
+            foreach (var item in TelegramBot.Spareparts)
+            {
+                string str = item.EquipmentName.ToLower()
+                    + item.CharacteristicsSpareParts.ToLower()
+                    + item.TypeNumber.ToLower()
+                    + item.NumberSpareParts.ToLower();
+                if (str.Contains(equipment.ToLower()))
+                    list.Add($"{item.Id}*" +
+                        $"{item.TypeNumber} " +
+                        $" {item.NumberSpareParts} " +
+                        $" {item.EquipmentName} " +
+                        $" {item.TypeAreaProduction} " +
+                        $": {item.WarehouseBalance} шт");
+            }
+            return list;
+        }
+
         public static List<string> GetListTypeParts(string typeSpare)
         {
             List<string> list = new List<string>();

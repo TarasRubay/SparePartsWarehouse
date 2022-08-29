@@ -79,7 +79,7 @@ namespace SparePartsWarehouse
                    $"Характеристика: {CharacteristicsSpareParts}\n" +
                    $"На обладнанні: {StateInEquipment}\n" +
                    $"Стелаж №: {NumberShelfShelving}\n" +
-                   $"На складі залишилось: {RealBalance}\n" +
+                   $"На складі залишилось: {Convert.ToInt32(WarehouseBalance) - 1}\n" +
                    $"Гаряча заміна: {HotChangeBalance}\n" +
                    $"Примітки: {Notes}";
         }

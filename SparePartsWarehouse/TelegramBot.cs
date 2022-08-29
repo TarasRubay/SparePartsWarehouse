@@ -49,7 +49,7 @@ namespace SparePartsWarehouse
             Task task = StartRecivingBots();
             var handle = GetConsoleWindow();
             TimeToRead = new System.Timers.Timer();
-            TimeToRead.Interval = 2000;
+            TimeToRead.Interval = 1000;
             TimeToRead.Elapsed += OnTimedEvent;
             TimeToRead.AutoReset = true;
             TimeToRead.Enabled = true;
@@ -183,21 +183,43 @@ namespace SparePartsWarehouse
                     using (StreamReader sr = new StreamReader(_excelPath))
                     {
                         Console.WriteLine("The file be read:");
-                        Console.WriteLine("delay 1 sec");
+                       //Console.WriteLine("delay 5 sec");
                         LastUpdateExcel = new FileInfo(_excelPath).LastWriteTime;
                     }
-
-                    //Thread thread = new Thread(new ThreadStart(StartReading));
-                    //thread.Start();
+                    //Console.WriteLine("delay 5 sec");
+                    //Thread.Sleep(5000);
+                    //ExcelManager excelManager = new(_excelPath);
+                    //Spareparts = excelManager.ReadSparepart();
+                    //Console.WriteLine("delay 5 sec");
+                    //Thread.Sleep(5000);
+                    //excelManager = new(_excelPath);
+                    //Spareparts = excelManager.ReadSparepart();
                     var res = Task.Run(async delegate
                     {
-                        await Task.Delay(1000, cancellation.Token);
+                        await Task.Delay(5000, cancellation.Token);
                         ExcelManager excelManager = new(_excelPath);
+                        Spareparts = excelManager.ReadSparepart();
+                        await Task.Delay(5000, cancellation.Token);
+                        excelManager = new(_excelPath);
                         Spareparts = excelManager.ReadSparepart();
                         return "Reading is done";
                     });
                     res.Wait();
-                    Console.WriteLine(res.Status);
+                    //if(res is not null)
+                    //{
+                    //    Console.WriteLine("delay 10 sec");
+                    //    var res2 = Task.Run(async delegate
+                    //    {
+                    //        await Task.Delay(10000, cancellation.Token);
+                    //        ExcelManager excelManager = new(_excelPath);
+                    //        Spareparts = excelManager.ReadSparepart();
+                    //        return "Reading is done";
+                    //    });
+                    //    res2.Wait();
+                    //    Console.WriteLine(res2.Status);
+                    //}
+                    // Console.WriteLine(res.Status);
+
 
                     foreach (var part in Spareparts)
                     {

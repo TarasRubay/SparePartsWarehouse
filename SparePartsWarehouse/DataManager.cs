@@ -10,13 +10,46 @@ namespace SparePartsWarehouse
     internal class DataManager
     {
         public string Path { get; private set; } = "";
+        
         public DataManager(string path)
         {
+      
             Path = path;
         }
+        public static void SavePathToEJSON(string pathFile,string pa)
+        {
+            try
+            {
+                //using FileStream fileStream = File.Create(PathJSON);
+                string jsonUs = System.Text.Json.JsonSerializer.Serialize(pathFile);
+                File.WriteAllText(pa, jsonUs);
+                Console.WriteLine($"Save data in {pa}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        public static string LoadFileExcelJSON(string pa)
+        {
+            string p = "";
+            try
+            {
+                using (StreamReader r = new StreamReader(pa))
+                {
+                    string json = r.ReadToEnd();
+                    p = JsonConvert.DeserializeObject<string>(json);
+                }
 
-        
-        public void SaveDataJSON(List<UserModel> users)
+                Console.WriteLine($"Load data from {pa}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return p;
+        }
+            public void SaveDataJSON(List<UserModel> users)
         {
             try
             {
@@ -30,6 +63,7 @@ namespace SparePartsWarehouse
                 Console.WriteLine(e.Message);
             }
         }
+
         public List<UserModel> LoadDataJSON()
         {
             List<UserModel> users = new();
