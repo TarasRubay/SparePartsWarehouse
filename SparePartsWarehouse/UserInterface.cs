@@ -133,10 +133,10 @@ namespace SparePartsWarehouse
                                     Zanko,
                                     user.LastMessage + $"\n забрав {user}"
                                     );
-                        await client.SendTextMessageAsync(
-                                    Rubay,
-                                    user.LastMessage + $"\n забрав {user}"
-                                    );
+                        //await client.SendTextMessageAsync(
+                        //            Rubay,
+                        //            user.LastMessage + $"\n забрав {user}"
+                        //            );
                         await client.SendTextMessageAsync(
                                 msg.Chat.Id,
                                 $"основне меню",
