@@ -16,6 +16,12 @@ namespace SparePartsWarehouse
         /// <summary>
         /// Заказний номер
         /// </summary>
+        /// 
+        public string Brand { get; set; }
+        /// <summary>
+        /// Заказний номер
+        /// </summary>
+        /// 
         public string NumberSpareParts { get; set; }
         /// <summary>
         /// Тип запчастини
@@ -60,6 +66,7 @@ namespace SparePartsWarehouse
         public override string ToString()
         {
             return $"ЦЕХ: {TypeAreaProduction}\n" +
+                   $"Бренд: {Brand}\n" +
                    $"Заказний №: {NumberSpareParts}\n" +
                    $"Тип: {TypeNumber}\n" +
                    $"Назва: {EquipmentName}\n" +
@@ -73,6 +80,7 @@ namespace SparePartsWarehouse
         public string ToStr()
         {
             return $"ЦЕХ: {TypeAreaProduction}\n" +
+                   $"Бренд: {Brand}\n" +
                    $"Заказний №: {NumberSpareParts}\n" +
                    $"Тип: {TypeNumber}\n" +
                    $"Назва: {EquipmentName}\n" +

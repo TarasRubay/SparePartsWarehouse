@@ -59,6 +59,7 @@ namespace SparePartsWarehouse
                 if (str.Contains(equipment.ToLower()))
                     list.Add($"{item.Id}*" +
                         $"{item.TypeNumber} " +
+                        $"{item.Brand} " +
                         $" {item.NumberSpareParts} " +
                         $" {item.EquipmentName} " +
                         $" {item.TypeAreaProduction} " +
