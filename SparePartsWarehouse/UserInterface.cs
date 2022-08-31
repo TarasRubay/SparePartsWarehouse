@@ -17,7 +17,7 @@ namespace SparePartsWarehouse
         public const string FindForEquipment = "Пошук запчастини по обладнанню";
         public const string FindForType = "Пошук запчастини по типу";
         public const string FindForPartsNumber = "Пошук запчастини по заказному коду";
-        public const string FindForEquipmentService = "Google";
+        public const string FindForEquipmentService = "Пошук";
 
         public const string CSK = "ЦСК";
         public const string CVK = "ЦВК";
@@ -96,14 +96,17 @@ namespace SparePartsWarehouse
                             if (str.Length > 0)
                             {
                                 sparepart = TelegramBot.Spareparts.FirstOrDefault(s => s.Id.Equals(Convert.ToInt32(str)));
+                                if (sparepart is null) sparepart = new() { Id = -112 };
                             }     
                         }
                     }
                     catch (Exception)
                     {
+                       
                         sparepart.Id = -112;
                     }
-                        if(sparepart.Id == -112)
+                    
+                    if (sparepart.Id == -112)
                         {
                         user.LastMessage = FindForEquipmentService;
                         }

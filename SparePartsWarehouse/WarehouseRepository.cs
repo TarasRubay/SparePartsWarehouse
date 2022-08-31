@@ -14,7 +14,20 @@ namespace SparePartsWarehouse
             List<string> list = new List<string>();
             foreach (var item in TelegramBot.Spareparts)
             {
-                if (item.TypeAreaProduction is not null && item.TypeAreaProduction == TypeArea && !list.Contains(item.EquipmentName)) list.Add(item.EquipmentName);
+                if (item.TypeAreaProduction is not null && item.TypeAreaProduction == TypeArea && !list.Contains(item.EquipmentName))
+                {
+                    if(item.EquipmentName.Contains(','))
+                        {
+                        var str = item.EquipmentName.Split(',');
+                            foreach (var it in str)
+	                        {
+                                if(!list.Contains(it.TrimStart().TrimEnd()))
+                                list.Add(it.TrimStart().TrimEnd());
+                          	}
+                        }
+                    else
+                            list.Add(item.EquipmentName);
+                }
             }
             return list;
         }
@@ -43,7 +56,7 @@ namespace SparePartsWarehouse
             List<string> list = new List<string>();
             foreach (var item in TelegramBot.Spareparts)
             {
-                if (item.EquipmentName == equipment) list.Add($"{item.Id}*{item.TypeNumber} {item.CharacteristicsSpareParts}: {item.WarehouseBalance} шт");
+                if (item.EquipmentName.Contains(equipment)) list.Add($"{item.Id}*{item.TypeNumber} {item.CharacteristicsSpareParts}: {item.WarehouseBalance} шт");
             }
             return list;
         }
@@ -53,6 +66,7 @@ namespace SparePartsWarehouse
             foreach (var item in TelegramBot.Spareparts)
             {
                 string str = item.EquipmentName.ToLower()
+                    + item.Brand.ToLower()
                     + item.CharacteristicsSpareParts.ToLower()
                     + item.TypeNumber.ToLower()
                     + item.NumberSpareParts.ToLower();
