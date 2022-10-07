@@ -56,7 +56,7 @@ namespace SparePartsWarehouse
             List<string> list = new List<string>();
             foreach (var item in TelegramBot.Spareparts)
             {
-                if (item.EquipmentName.Contains(equipment)) list.Add($"{item.Id}*{item.TypeNumber} {item.CharacteristicsSpareParts}: {item.WarehouseBalance} шт");
+                if (item.EquipmentName.Contains(equipment)) list.Add($"{item.Id}*|{item.TypeNumber}|{item.NumberSpareParts}|{item.CharacteristicsSpareParts}| [{item.WarehouseBalance} шт]");
             }
             return list;
         }
@@ -87,7 +87,7 @@ namespace SparePartsWarehouse
             List<string> list = new List<string>();
             foreach (var item in TelegramBot.Spareparts)
             {
-                if (item.TypeNumber == typeSpare) list.Add($"{item.Id}*{item.NumberSpareParts} {item.CharacteristicsSpareParts}: {item.WarehouseBalance} шт");
+                if (item.TypeNumber == typeSpare) list.Add($"{item.Id}*|{item.EquipmentName}|{item.NumberSpareParts}|{item.CharacteristicsSpareParts}| [{item.WarehouseBalance} шт]");
             }
             return list;
         }
