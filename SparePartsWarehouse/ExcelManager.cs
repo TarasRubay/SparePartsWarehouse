@@ -34,6 +34,9 @@ namespace SparePartsWarehouse
             int ind=0;
             foreach (List<object> item in array)
             {
+                try
+                {
+
                 Sparepart sparepart = new Sparepart();
                 sparepart.Id = ind++;
                 sparepart.TypeAreaProduction = item[a] is not null? item[a].ToString() : "";
@@ -48,9 +51,15 @@ namespace SparePartsWarehouse
                 sparepart.WarehouseBalance = item[k] is not null? item[k].ToString() : "";
                 sparepart.HotChangeBalance = item[l] is not null? item[l].ToString() : "";
                 sparepart.Notes = item[m] is not null? item[m].ToString() : "";
-                if(sparepart.WarehouseBalance == "")
-                sparepart.RealBalance = Convert.ToInt32(sparepart.WarehouseBalance);
+                    if (sparepart.WarehouseBalance != "")
+                        sparepart.RealBalance = Convert.ToInt32(sparepart.WarehouseBalance);
+                    else sparepart.RealBalance = 0;
                 spareparts.Add(sparepart);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{ex.Message} index {ind}");
+                }
             }
             return spareparts;
         }
